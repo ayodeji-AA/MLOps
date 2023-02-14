@@ -1,7 +1,7 @@
 {
     "num_workers": 0,
     "cluster_name": "Slowburn",
-    "spark_version": "10.5.x-cpu-ml-scala2.12",
+    "spark_version": "12.0.x-cpu-ml-scala2.12",
     "spark_conf": {
         "spark.master": "local[*, 4]",
         "spark.databricks.cluster.profile": "singleNode",
