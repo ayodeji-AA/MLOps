@@ -261,10 +261,10 @@ jobs:
     environment:
         name: Staging
     env:
-      resourceGroupName: 'Databricks-MyProject-MG-QA'
-      databricksWorkspaceName: 'Databricks-MyProject-MG-QA'
-      keyVaultName: 'KeyVault-MyProject7-QA'
-      NotebookDeploymentPath: '/MyProject'
+      resourceGroupName: 'MLOpsTraining-QA'
+      databricksWorkspaceName: 'Databricks-MLOps-QA'
+      keyVaultName: 'KeyVault-MLOps-QA'
+      NotebookDeploymentPath: '/MLOps'
       GitNotebookPath: 'notebooks'
 
     steps:
@@ -332,8 +332,8 @@ jobs:
       # if: ${{ github.event.inputs.MODE == 'SKIP FOR TESTING' }}
       with:
         inlineScript: |
-          az group create --location 'EastUS2' --name 'Databricks-MyProject-MG-QA'
-          az deployment group create --resource-group 'Databricks-MyProject-MG-QA' --template-file $GITHUB_WORKSPACE/ARM-Templates/azuredeploy.databricks.json --parameters @$GITHUB_WORKSPACE/ARM-Templates/parameters.databricks.json --parameters workspaceName='Databricks-MyProject-MG-QA'
+          az group create --location 'North Europe' --name 'Databricks-MLOps-QA'
+          az deployment group create --resource-group 'MLOpsTraining-QA' --template-file $GITHUB_WORKSPACE/ARM-Templates/azuredeploy.databricks.json --parameters @$GITHUB_WORKSPACE/ARM-Templates/parameters.databricks.json --parameters workspaceName='Databricks-MLOps-QA'
     # Deploy Azure KeyVault
     - name: Deploy ARM Template (KeyVault)
       uses: azure/CLI@v1
@@ -390,10 +390,10 @@ jobs:
     environment:
         name: Prod
     env:
-      resourceGroupName: 'Databricks-MyProject-MG-Prod'
-      databricksWorkspaceName: 'Databricks-MyProject-MG-Prod'
-      keyVaultName: 'KeyVault-MyProject7-Prod'
-      NotebookDeploymentPath: '/MyProject'
+      resourceGroupName: 'MLOpsTraining-Prod'
+      databricksWorkspaceName: 'Databricks-MLOps-Prod'
+      keyVaultName: 'KeyVault-MLOps-Prod'
+      NotebookDeploymentPath: '/MLOps'
       GitNotebookPath: 'notebooks'
 
     steps:
@@ -461,8 +461,8 @@ jobs:
       # if: ${{ github.event.inputs.MODE == 'SKIP FOR TESTING' }}
       with:
         inlineScript: |
-          az group create --location 'EastUS2' --name 'Databricks-MyProject-MG-Prod'
-          az deployment group create --resource-group 'Databricks-MyProject-MG-Prod' --template-file $GITHUB_WORKSPACE/ARM-Templates/azuredeploy.databricks.json --parameters @$GITHUB_WORKSPACE/ARM-Templates/parameters.databricks.json --parameters workspaceName='Databricks-MyProject-MG-Prod'
+          az group create --location 'North Europe' --name 'Databricks-MLOps-Prod'
+          az deployment group create --resource-group 'MLOpsTraining-Prod' --template-file $GITHUB_WORKSPACE/ARM-Templates/azuredeploy.databricks.json --parameters @$GITHUB_WORKSPACE/ARM-Templates/parameters.databricks.json --parameters workspaceName='Databricks-MLOps-Prod'
     # Deploy Azure KeyVault
     - name: Deploy ARM Template (KeyVault)
       uses: azure/CLI@v1
