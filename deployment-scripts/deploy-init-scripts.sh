@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Must be run in the directory with the init-scripts (spaces in names in Bash can cause issues)
-# Must be run in the directory with the clusters (spaces in names in Bash can cause issues)
+# Must be run in the directory with the init-scripts spaces in names in Bash can cause issues
+# Must be run in the directory with the clusters spaces in names in Bash can cause issues
 tenant_id=$1
 client_id=$2
 client_secret=$3
