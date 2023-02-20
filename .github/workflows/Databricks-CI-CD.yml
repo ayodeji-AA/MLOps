@@ -14,44 +14,44 @@ on:
       GIT_NOTEBOOK_PATH:
         description: 'Notebooks Relative Path in Git'
         required: true
-        default: 'notebooks/MyProject'
+        default: 'notebooks'
 
       # This is where in your Databricks workspace your notebooks will be deployed
       # Typically this is under a Folder under the Workspace and not under a specific user's folder
       NOTEBOOK_DEPLOYMENT_PATH:
         description: 'Notebooks Deployment Path to Databricks'
         required: true
-        default: '/MyProject'
+        default: '/MLOps'
 
 #       # This resource group for the Databricks workspace and KeyVault
       RESOURCE_GROUP:
         description: 'Resource Group Name'
         required: true
-        default: 'Databricks-MyProject-MG'
+        default: 'Databricks-MLOps'
 
       # The Azure region to which to deploy your resources
       LOCATION:
         description: 'Azure Region'
         required: true
-        default: 'EastUS2'
+        default: 'North Europe'
 
       # This is the name of your Azure Databricks resource
       WORKSPACE_NAME:
         description: 'Databricks workspace name'
         required: true
-        default: 'Databricks-MyProject-MG'
+        default: 'Databricks-MLOps'
 
       # This is a KeyVault for holding the Service Principal to make Databricks API calls and to hold Databricks KeyVault backed Secrets
       KEY_VAULT_NAME:
         description: 'KeyVault name'
         required: true
-        default: 'KeyVault-MyProject7'
+        default: 'KeyVault-MLOps'
 
       # This is a KeyVault for holding the Service Principal to make Databricks API calls and to hold Databricks KeyVault backed Secrets
       SUBSCRIPTION_ID:
         description: 'Azure Subscription Id'
         required: true
-        default: ''
+        default: '1cdb1b2b-10a7-4766-968e-2b5fc024df2e'
 
       # Inialize the system
       # Note: We only want to run the KeyVault ARM template once.  If you keep re-running, then you will OVERWRITE your values
@@ -132,11 +132,11 @@ jobs:
     needs: Build
     runs-on: ubuntu-latest
     env:
-      resourceGroupName: 'Databricks-MyProject-MG-Dev'
-      databricksWorkspaceName: 'Databricks-MyProject-MG-Dev'
-      keyVaultName: 'KeyVault-MyProject7-Dev'
-      NotebookDeploymentPath: '/MyProject'
-      GitNotebookPath: 'notebooks/MyProject'
+      resourceGroupName: 'MLOpsTraining-Dev'
+      databricksWorkspaceName: 'Databricks-MLOps-Dev'
+      keyVaultName: 'KeyVault-MLOps-Dev'
+      NotebookDeploymentPath: '/MLOps'
+      GitNotebookPath: 'notebooks'
 
     steps:
     # Show the environment variables for debugging
@@ -203,8 +203,8 @@ jobs:
       # if: ${{ github.event.inputs.MODE == 'SKIP FOR TESTING' }}
       with:
         inlineScript: |
-          az group create --location 'EastUS2' --name 'Databricks-MyProject-MG-Dev'
-          az deployment group create --resource-group 'Databricks-MyProject-MG-Dev' --template-file $GITHUB_WORKSPACE/ARM-Templates/azuredeploy.databricks.json --parameters @$GITHUB_WORKSPACE/ARM-Templates/parameters.databricks.json --parameters workspaceName='Databricks-MyProject-MG-Dev'
+          az group create --location 'North Europe' --name 'Databricks-MLOps-Dev'
+          az deployment group create --resource-group 'MLOpsTraining-Dev' --template-file $GITHUB_WORKSPACE/ARM-Templates/azuredeploy.databricks.json --parameters @$GITHUB_WORKSPACE/ARM-Templates/parameters.databricks.json --parameters workspaceName='Databricks-MLOps-Dev'
     # Deploy Azure KeyVault
     - name: Deploy ARM Template (KeyVault)
       uses: azure/CLI@v1
@@ -220,7 +220,7 @@ jobs:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
       #if: ${{ github.event.inputs.MODE == 'Databricks' }}
       with:
-        keyvault: 'KeyVault-MyProject7-Dev'
+        keyvault: 'KeyVault-MLOps-Dev'
         secrets: 'databricks-dev-ops-subscription-id,databricks-dev-ops-tenant-id,databricks-dev-ops-client-id,databricks-dev-ops-client-secret'
       id: databricksSecretAction
 
@@ -242,7 +242,7 @@ jobs:
     - name: Deploy Databricks Notebooks
       #if: ${{ github.event.inputs.MODE == 'Databricks' }}
       run: |
-        cd "$GITHUB_WORKSPACE/notebooks/MyProject"
+        cd "$GITHUB_WORKSPACE/notebooks"
         chmod +x $GITHUB_WORKSPACE/deployment-scripts/deploy-notebooks.sh
         $GITHUB_WORKSPACE/deployment-scripts/deploy-notebooks.sh ${{ steps.databricksSecretAction.outputs.databricks-dev-ops-tenant-id }} ${{ steps.databricksSecretAction.outputs.databricks-dev-ops-client-id }} ${{ steps.databricksSecretAction.outputs.databricks-dev-ops-client-secret }} ${{ steps.databricksSecretAction.outputs.databricks-dev-ops-subscription-id }} ${{ env.resourceGroupName }} ${{ env.databricksWorkspaceName }} ${{ env.NotebookDeploymentPath }}
     # Deploy Databricks Jobs
@@ -261,11 +261,11 @@ jobs:
     environment:
         name: Staging
     env:
-      resourceGroupName: 'Databricks-MyProject-MG-QA'
-      databricksWorkspaceName: 'Databricks-MyProject-MG-QA'
-      keyVaultName: 'KeyVault-MyProject7-QA'
-      NotebookDeploymentPath: '/MyProject'
-      GitNotebookPath: 'notebooks/MyProject'
+      resourceGroupName: 'MLOpsTraining-QA'
+      databricksWorkspaceName: 'Databricks-MLOps-QA'
+      keyVaultName: 'KeyVault-MLOps-QA'
+      NotebookDeploymentPath: '/MLOps'
+      GitNotebookPath: 'notebooks'
 
     steps:
     # Show the environment variables for debugging
@@ -332,8 +332,8 @@ jobs:
       # if: ${{ github.event.inputs.MODE == 'SKIP FOR TESTING' }}
       with:
         inlineScript: |
-          az group create --location 'EastUS2' --name 'Databricks-MyProject-MG-QA'
-          az deployment group create --resource-group 'Databricks-MyProject-MG-QA' --template-file $GITHUB_WORKSPACE/ARM-Templates/azuredeploy.databricks.json --parameters @$GITHUB_WORKSPACE/ARM-Templates/parameters.databricks.json --parameters workspaceName='Databricks-MyProject-MG-QA'
+          az group create --location 'North Europe' --name 'Databricks-MLOps-QA'
+          az deployment group create --resource-group 'MLOpsTraining-QA' --template-file $GITHUB_WORKSPACE/ARM-Templates/azuredeploy.databricks.json --parameters @$GITHUB_WORKSPACE/ARM-Templates/parameters.databricks.json --parameters workspaceName='Databricks-MLOps-QA'
     # Deploy Azure KeyVault
     - name: Deploy ARM Template (KeyVault)
       uses: azure/CLI@v1
@@ -371,7 +371,7 @@ jobs:
     - name: Deploy Databricks Notebooks
       #if: ${{ github.event.inputs.MODE == 'Databricks' }}
       run: |
-        cd "$GITHUB_WORKSPACE/notebooks/MyProject"
+        cd "$GITHUB_WORKSPACE/notebooks"
         chmod +x $GITHUB_WORKSPACE/deployment-scripts/deploy-notebooks.sh
         $GITHUB_WORKSPACE/deployment-scripts/deploy-notebooks.sh ${{ steps.databricksSecretAction.outputs.databricks-dev-ops-tenant-id }} ${{ steps.databricksSecretAction.outputs.databricks-dev-ops-client-id }} ${{ steps.databricksSecretAction.outputs.databricks-dev-ops-client-secret }} ${{ steps.databricksSecretAction.outputs.databricks-dev-ops-subscription-id }} ${{ env.resourceGroupName }} ${{ env.databricksWorkspaceName }} ${{ env.NotebookDeploymentPath }}
     # Deploy Databricks Jobs
@@ -390,11 +390,11 @@ jobs:
     environment:
         name: Prod
     env:
-      resourceGroupName: 'Databricks-MyProject-MG-Prod'
-      databricksWorkspaceName: 'Databricks-MyProject-MG-Prod'
-      keyVaultName: 'KeyVault-MyProject7-Prod'
-      NotebookDeploymentPath: '/MyProject'
-      GitNotebookPath: 'notebooks/MyProject'
+      resourceGroupName: 'MLOpsTraining-Prod'
+      databricksWorkspaceName: 'Databricks-MLOps-Prod'
+      keyVaultName: 'KeyVault-MLOps-Prod'
+      NotebookDeploymentPath: '/MLOps'
+      GitNotebookPath: 'notebooks'
 
     steps:
     # Show the environment variables for debugging
@@ -461,8 +461,8 @@ jobs:
       # if: ${{ github.event.inputs.MODE == 'SKIP FOR TESTING' }}
       with:
         inlineScript: |
-          az group create --location 'EastUS2' --name 'Databricks-MyProject-MG-Prod'
-          az deployment group create --resource-group 'Databricks-MyProject-MG-Prod' --template-file $GITHUB_WORKSPACE/ARM-Templates/azuredeploy.databricks.json --parameters @$GITHUB_WORKSPACE/ARM-Templates/parameters.databricks.json --parameters workspaceName='Databricks-MyProject-MG-Prod'
+          az group create --location 'North Europe' --name 'Databricks-MLOps-Prod'
+          az deployment group create --resource-group 'MLOpsTraining-Prod' --template-file $GITHUB_WORKSPACE/ARM-Templates/azuredeploy.databricks.json --parameters @$GITHUB_WORKSPACE/ARM-Templates/parameters.databricks.json --parameters workspaceName='Databricks-MLOps-Prod'
     # Deploy Azure KeyVault
     - name: Deploy ARM Template (KeyVault)
       uses: azure/CLI@v1
@@ -500,7 +500,7 @@ jobs:
     - name: Deploy Databricks Notebooks
       #if: ${{ github.event.inputs.MODE == 'Databricks' }}
       run: |
-        cd "$GITHUB_WORKSPACE/notebooks/MyProject"
+        cd "$GITHUB_WORKSPACE/notebooks"
         chmod +x $GITHUB_WORKSPACE/deployment-scripts/deploy-notebooks.sh
         $GITHUB_WORKSPACE/deployment-scripts/deploy-notebooks.sh ${{ steps.databricksSecretAction.outputs.databricks-dev-ops-tenant-id }} ${{ steps.databricksSecretAction.outputs.databricks-dev-ops-client-id }} ${{ steps.databricksSecretAction.outputs.databricks-dev-ops-client-secret }} ${{ steps.databricksSecretAction.outputs.databricks-dev-ops-subscription-id }} ${{ env.resourceGroupName }} ${{ env.databricksWorkspaceName }} ${{ env.NotebookDeploymentPath }}
     # Deploy Databricks Jobs
