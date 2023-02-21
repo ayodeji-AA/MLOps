@@ -18,30 +18,30 @@ resourceId="/subscriptions/$subscription_id/resourceGroups/$resourceGroup/provid
 # Get access tokens for Databricks API
 ######################################################################################
 
-accessToken=$(
+accessToken=$"(
         curl -X POST https://login.microsoftonline.com/$tenant_id/oauth2/token \
         -F resource=$azure_databricks_resource_id \
         -F client_id=$client_id \
         -F grant_type=client_credentials \
         -F client_secret=$client_secret | jq .access_token --raw-output
-)
+)"
 
-managementToken=$(
+managementToken=$"(
         curl -X POST https://login.microsoftonline.com/$tenant_id/oauth2/token \
         -F resource=https://management.core.windows.net/ \
         -F client_id=$client_id \
         -F grant_type=client_credentials \
         -F client_secret=$client_secret | jq .access_token --raw-output
-)
+)"
 
 ######################################################################################
 # Get Databricks workspace URL (e.g. adb-5946405904802522.2.azuredatabricks.net)
 ######################################################################################
-workspaceUrl=$(
+workspaceUrl=$"(
         curl -X GET \
         -H "Content-Type: application/json" \
         -H "Authorization: Bearer $managementToken" https://management.azure.com/subscriptions/$subscription_id/resourcegroups/$resourceGroup/providers/Microsoft.Databricks/workspaces/$workspaceName?api-version=2018-04-01 | jq .properties.workspaceUrl --raw-output
-)
+)"
 
 echo "Databricks workspaceUrl: $workspaceUrl"
 
