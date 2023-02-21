@@ -88,3 +88,4 @@ jobs:
       run: |
         cd "${GITHUB_WORKSPACE}/init-scripts"
         ls
+        chmod +x ${GITHUB_WORKSPACE}/deployment-scripts/deploy-notebooks.sh
