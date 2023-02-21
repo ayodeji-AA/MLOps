@@ -176,11 +176,11 @@ jobs:
         path: ${{ github.workspace }}/jobs
 
     # Download Artifact: Databricks-Init-Scripts
-    - name: 'Download Artifact: Databricks-Init-Scripts' 
-      uses: actions/download-artifact@v2
-      with:
-        name: 'init-scripts'
-        path: ${{ github.workspace }}/init-scripts
+    #- name: 'Download Artifact: Databricks-Init-Scripts' 
+    #  uses: actions/download-artifact@v2
+    #  with:
+    #    name: 'init-scripts'
+    #    path: ${{ github.workspace }}/init-scripts
 
     # Download Artifact: Deployment Scripts
     - name: 'Download Artifact: Deployment Scripts' 
@@ -225,12 +225,12 @@ jobs:
       id: databricksSecretAction
 
     # Deploy your Databricks Init Scripts to dbfa:/init-scripts folder on DBFS
-    - name:  Deploy your Databricks Init Scripts to dbfa:/init-scripts folder on DBFS
+    #- name:  Deploy your Databricks Init Scripts to dbfa:/init-scripts folder on DBFS
     #  if: ${{ github.event.inputs.MODE == 'Databricks' }}
-      run: |
-        cd "$GITHUB_WORKSPACE/init-scripts"
-        chmod +x $GITHUB_WORKSPACE/deployment-scripts/deploy-init-scripts.sh
-        $GITHUB_WORKSPACE/deployment-scripts/deploy-init-scripts.sh ${{ steps.databricksSecretAction.outputs.databricks-dev-ops-tenant-id }} ${{ steps.databricksSecretAction.outputs.databricks-dev-ops-client-id }} ${{ steps.databricksSecretAction.outputs.databricks-dev-ops-client-secret }} ${{ steps.databricksSecretAction.outputs.databricks-dev-ops-subscription-id }} ${{ env.resourceGroupName }} ${{ env.databricksWorkspaceName }}
+    #  run: |
+    #    cd "$GITHUB_WORKSPACE/init-scripts"
+    #    chmod +x $GITHUB_WORKSPACE/deployment-scripts/deploy-init-scripts.sh
+    #    $GITHUB_WORKSPACE/deployment-scripts/deploy-init-scripts.sh ${{ steps.databricksSecretAction.outputs.databricks-dev-ops-tenant-id }} ${{ steps.databricksSecretAction.outputs.databricks-dev-ops-client-id }} ${{ steps.databricksSecretAction.outputs.databricks-dev-ops-client-secret }} ${{ steps.databricksSecretAction.outputs.databricks-dev-ops-subscription-id }} ${{ env.resourceGroupName }} ${{ env.databricksWorkspaceName }}
     # Deploy Databricks Clusters
     - name: Deploy Databricks Clusters
       #if: ${{ github.event.inputs.MODE == 'Databricks' }}
