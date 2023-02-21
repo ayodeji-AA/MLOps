@@ -223,15 +223,21 @@ jobs:
         keyvault: 'KeyVault-MLOps-Dev'
         secrets: 'databricks-dev-ops-subscription-id,databricks-dev-ops-tenant-id,databricks-dev-ops-client-id,databricks-dev-ops-client-secret'
       id: databricksSecretAction
-
     # Deploy your Databricks Init Scripts to dbfa:/init-scripts folder on DBFS
     - name:  Deploy your Databricks Init Scripts to dbfa:/init-scripts folder on DBFS
     #  if: ${{ github.event.inputs.MODE == 'Databricks' }}
       run: |
         cd ${GITHUB_WORKSPACE}/init-scripts
         chmod +x ${GITHUB_WORKSPACE}/deployment-scripts/deploy-init-scripts.sh
-        ${GITHUB_WORKSPACE}/deployment-scripts/deploy-init-scripts.sh "${{ steps.databricksSecretAction.outputs.databricks-dev-ops-tenant-id }} ${{ steps.databricksSecretAction.outputs.databricks-dev-ops-client-id }} ${{ steps.databricksSecretAction.outputs.databricks-dev-ops-client-secret }} ${{ steps.databricksSecretAction.outputs.databricks-dev-ops-subscription-id }} ${{ env.resourceGroupName }} ${{ env.databricksWorkspaceName }}"
-    # Deploy Databricks Clusters
+        ${GITHUB_WORKSPACE}/deployment-scripts/deploy-init-scripts.sh "${{ steps.databricksSecretAction.outputs.databricks-dev-ops-tenant-id }} ${{ steps.databricksSecretAction.outputs.databricks-dev-ops-client-id }} ${{ steps.databricksSecretAction.outputs.databricks-dev-ops-client-secret }} ${{ steps.databricksSecretAction.outputs.databricks-dev-ops-subscription-id }} ${{ env.resourceGroupName }} ${{ env.databricksWorkspaceName }}"    # Deploy Databricks Clusters
+      env:
+        tenant_id: ${{ steps.databricksSecretAction.outputs.databricks-dev-ops-tenant-id }}
+        client_id: ${{ steps.databricksSecretAction.outputs.databricks-dev-ops-client-id }}
+        client_secret: ${{ steps.databricksSecretAction.outputs.databricks-dev-ops-client-secret }}
+        subscription_id: ${{ steps.databricksSecretAction.outputs.databricks-dev-ops-subscription-id }}
+        resourceGroup: ${{ env.resourceGroupName }}
+        workspaceName: ${{ env.databricksWorkspaceName }}
+
     - name: Deploy Databricks Clusters
       #if: ${{ github.event.inputs.MODE == 'Databricks' }}
       run: |
