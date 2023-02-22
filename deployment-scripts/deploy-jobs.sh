@@ -96,6 +96,7 @@ find . -type f -name "*" -print0 | while IFS= read -r -d '' file; do
     echo "Processing file: $file"
     filename=${file//$replaceSource/$replaceDest}
     echo "New filename: $filename"
+    echo "job list: $jobList"
 
     jobName=$(cat $filename | jq -r .name)
     jobId=$(echo $jobList | jq -r ".jobs[] | select(.settings.name == \"$jobName\") | .job_id")
