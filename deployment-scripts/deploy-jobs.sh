@@ -65,14 +65,14 @@ replaceSource="./"
 replaceDest=""
 
 # Get a list of clusters so we know the clusters ids
-clusterList=$(curl GET https://$workspaceUrl/api/2.0/clusters/list \
+clusterList=$(curl -X GET https://$workspaceUrl/api/2.0/clusters/list \
             -H "Authorization:Bearer $accessToken" \
             -H "X-Databricks-Azure-SP-Management-Token: $managementToken" \
             -H "X-Databricks-Azure-Workspace-Resource-Id: $resourceId" \
             -H "Content-Type: application/json")
 
 # Get a list of clusters so we know the clusters ids
-jobList=$(curl GET https://$workspaceUrl/api/2.0/jobs/list \
+jobList=$(curl -X GET https://$workspaceUrl/api/2.0/jobs/list \
             -H "Authorization:Bearer $accessToken" \
             -H "X-Databricks-Azure-SP-Management-Token: $managementToken" \
             -H "X-Databricks-Azure-Workspace-Resource-Id: $resourceId" \
@@ -96,6 +96,7 @@ find . -type f -name "*" -print0 | while IFS= read -r -d '' file; do
     echo "Processing file: $file"
     filename=${file//$replaceSource/$replaceDest}
     echo "New filename: $filename"
+    echo "job list: $jobList"
 
     jobName=$(cat $filename | jq -r .name)
     jobId=$(echo $jobList | jq -r ".jobs[] | select(.settings.name == \"$jobName\") | .job_id")
@@ -113,7 +114,7 @@ find . -type f -name "*" -print0 | while IFS= read -r -d '' file; do
     echo "clusterId: $clusterId"
 
     # Check for error
-    if [ $existing_cluster_id_ClusterName = "null" &&  $clusterId = "" ];
+    if [[ $existing_cluster_id_ClusterName = "null" &&  $clusterId = "" ]];
     then
         echo "ERROR: The job specifics an existing cluster name of ($existing_cluster_id_ClusterName), but not cluster with that name was found in the Databricks workspace."
         exit 1;

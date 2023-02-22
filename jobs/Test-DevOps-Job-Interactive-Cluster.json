@@ -1,6 +1,6 @@
 {
     "name": "Test-DevOps-Job-Interactive-Cluster",
-    "existing_cluster_id": "slowburn",
+    "existing_cluster_id": "Slowburn",
     "email_notifications": {},
     "timeout_seconds": 0,
     "notebook_task": {
