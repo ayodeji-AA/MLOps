@@ -2,12 +2,12 @@
 
 # Must be run in the directory with the init-scripts (spaces in names in Bash can cause issues)
 # Must be run in the directory with the clusters (spaces in names in Bash can cause issues)
-tenant_id= $tenant_id
-client_id=$client_id
-client_secret=$client_secret
-subscription_id=$subscription_id
-resourceGroup=$resourceGroup
-workspaceName=$workspaceName
+tenant_id= "6d2c78dd-1f85-4ccb-9ae3-cd5ea1cca361"
+client_id= "1353dec0-fc10-4b32-8c7c-e3bca9fe19d7"
+client_secret= "q2J8Q~ryZxwnIG9LRtcyXS9dvQPH4YJMZfGu4cKU"
+subscription_id= "1cdb1b2b-10a7-4766-968e-2b5fc024df2e"
+resourceGroup=$5
+workspaceName=$6
 
 azure_databricks_resource_id="2ff814a6-3304-4ab8-85cb-cd0e6f879c1d"
 resourceId="/subscriptions/$subscription_id/resourceGroups/$resourceGroup/providers/Microsoft.Databricks/workspaces/$workspaceName"
