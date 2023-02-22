@@ -19,16 +19,16 @@ initScriptsPath="dbfs:/init-scripts"
 ######################################################################################
 
 accessToken=$(curl -X POST https://login.microsoftonline.com/$tenant_id/oauth2/token \
-  -F "resource=$azure_databricks_resource_id" \
-  -F "client_id=$client_id" \
-  -F "grant_type= client_credentials" \
-  -F "client_secret=$client_secret" | jq .access_token --raw-output) 
+  -F resource=$azure_databricks_resource_id \
+  -F client_id=$client_id \
+  -F grant_type=client_credentials \
+  -F client_secret=$client_secret | jq .access_token --raw-output) 
 
 managementToken=$(curl -X POST https://login.microsoftonline.com/$tenant_id/oauth2/token \
-  -F "resource=https://management.core.windows.net/" \
-  -F "client_id=$client_id" \
-  -F "grant_type= client_credentials" \
-  -F "client_secret=$client_secret" | jq .access_token --raw-output) 
+  -F resource=https://management.core.windows.net/ \
+  -F client_id=$client_id \
+  -F grant_type=client_credentials \
+  -F client_secret=$client_secret | jq .access_token --raw-output) 
 
 
 ######################################################################################
