@@ -114,7 +114,7 @@ find . -type f -name "*" -print0 | while IFS= read -r -d '' file; do
     echo "clusterId: $clusterId"
 
     # Check for error
-    if [ $existing_cluster_id_ClusterName = "null" &&  $clusterId = "" ];
+    if [[ $existing_cluster_id_ClusterName = "null" &&  $clusterId = "" ]];
     then
         echo "ERROR: The job specifics an existing cluster name of ($existing_cluster_id_ClusterName), but not cluster with that name was found in the Databricks workspace."
         exit 1;
